@@ -101,15 +101,24 @@ async function getFeedback(readArticle) {
           return;
         }
         console.log('Data has been inserted into the file.');
-        
-          resolve({ feedback: response.data })
-        });
-      // });
+      });
+      
+      //append the data file to the response
+      const filePath = path.join(process.cwd(), '/uploads', 'feedback.txt')
+      const fileBuffer = fs.readFile(filePath)
+
+      const headers = {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="feedback.txt"',
+      };
+
+      resolve(fileBuffer, { headers });
     } catch (error) {
       console.error(error.message);
       reject('Error sending request to generate feedback.');
     }
   });
 }
+
 
 app.listen(4000, () => console.log('Running on http://localhost:4000'));
