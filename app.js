@@ -17,7 +17,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://127.0.0.1:3000', 'https://supervisr.vercel.app/file-upload']
+  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io/mysupervisr-client']
 }))
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
@@ -73,7 +73,9 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
+app.get('/', (req, res) => {
+  res.send('<h1>Visit: <a href="https://luqmanshaban.github.io/mysupervisr-client/">The client side</a></h1>')
+})
 app.post('/file-upload', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
