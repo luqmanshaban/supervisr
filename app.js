@@ -27,6 +27,9 @@ app.post('/api/v1/articles', async (req, res) => {
   const article = req.body.article
   try {
     const response = await run(article);
+    setTimeout(() => {
+      deleteUploadedFiles()
+    }, 5000)
     // console.log(response);
     return res.status(200).json(response);  // Reversed the order of status and json
   } catch (error) {
@@ -35,6 +38,16 @@ app.post('/api/v1/articles', async (req, res) => {
   }
 });
 
+async function deleteUploadedFiles() {
+  const filePath = path.join(__dirname, 'uploads/', 'file.txt');
+
+  try {
+    await fs.promises.unlink(filePath);
+    console.log('File.txt has been deleted.');
+  } catch (error) {
+    console.error(`Error deleting file.txt: ${error.message}`);
+  }
+}
 
 async function run(article) {
   // For text-only input, use the gemini-pro model
@@ -74,8 +87,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 app.get('/', (req, res) => {
-  res.send('<h1>Visit: <a href="https://luqmanshaban.github.io/mysupervisr-client/">The client side</a></h1>')
+  res.send('<p>Visit: <a href="https://luqmanshaban.github.io/mysupervisr-client/">The client side</a></p>')
 })
+
 app.post('/file-upload', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
@@ -106,15 +120,15 @@ async function getFeedback(readArticle) {
     const article = { article: readArticle };
     try {
       const response = await axios.post('http://localhost:4000/api/v1/articles', article);
-      fs.appendFile('uploads/feedback.txt', response.data, (err) => {
-        if (err) {
-          console.error(`Error appending data to the file: ${err.message}`);
-          reject('Error appending data to the file.');
-          return;
-        }
-        console.log('Data has been inserted into the file.');
+      // fs.appendFile('uploads/feedback.txt', response.data, (err) => {
+      //   if (err) {
+      //     console.error(`Error appending data to the file: ${err.message}`);
+      //     reject('Error appending data to the file.');
+      //     return;
+      //   }
+      //   console.log('Data has been inserted into the file.');
         
-      });
+      // });
       resolve(response.data)
       // });
     } catch (error) {
