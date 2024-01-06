@@ -38,13 +38,21 @@ async function run(article) {
   // For text-only input, use the gemini-pro model
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-  const message = `analyze the following essay, and return insightful summaries, highlight key findings, contribute and offer ways to improve the work by suggesting alternative academic phrases and relevant peer reviewed articles only from google scholar. Ensure to condenses main points while maintaining accuracy and coherence. Here's the essay : ${article}`;
+  const message = `analyze the following essay, and return insightful summaries, highlight key findings, contribute and offer ways to improve the work by suggesting alternative academic phrases and relevant peer-reviewed articles only from Google Scholar. Ensure to condense main points while maintaining accuracy and coherence.
+  Make sure you do the following: 
+  1. Create and return a JavaScript object called feedback. The object MUST have the keys: summary, alternativePhrases, waysToImprove, relevantArticles.
+  2. Don't add any other word or character before or after the JavaScript object 
+  3. Make sure the length of the response is not less than 200 words
+  4. Return your response in a TEXT format and NOT in a CODE SNIPPET format i.e NO BACKTICKS
+
+   Here's the essay : ${article}`;
 
   const result = await model.generateContent(message);
   const response = await result.response;
   const text = response.text();
   return text;
 }
+
 
 const uploadDirectory = 'uploads/';
 
@@ -102,7 +110,7 @@ async function getFeedback(readArticle) {
         }
         console.log('Data has been inserted into the file.');
         
-          resolve({ feedback: response.data })
+          resolve(response.data)
         });
       // });
     } catch (error) {
