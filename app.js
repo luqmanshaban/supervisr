@@ -16,7 +16,9 @@ const __dirname = dirname(__filename);
 const app = express();
 
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+  origin: ['http://127.0.0.1:3000', 'https://supervisr.vercel.app/file-upload']
+}))
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
@@ -40,7 +42,7 @@ async function run(article) {
 
   const message = `analyze the following essay, and return insightful summaries, highlight key findings, contribute and offer ways to improve the work by suggesting alternative academic phrases and relevant peer-reviewed articles only from Google Scholar. Ensure to condense main points while maintaining accuracy and coherence.
   Make sure you do the following: 
-  1. Create and return a JavaScript object called feedback. The object MUST have the keys: summary, alternativePhrases, waysToImprove, relevantArticles.
+  1. Create and return a JavaScript object called feedback. The object MUST have the keys: summary, alternativePhrases(phrases the writer should use instead of the one used), waysToImprove, relevantArticles.
   2. Don't add any other word or character before or after the JavaScript object 
   3. Make sure the length of the response is not less than 200 words
   4. Return your response in a TEXT format and NOT in a CODE SNIPPET format i.e NO BACKTICKS
@@ -110,8 +112,8 @@ async function getFeedback(readArticle) {
         }
         console.log('Data has been inserted into the file.');
         
-          resolve(response.data)
-        });
+      });
+      resolve(response.data)
       // });
     } catch (error) {
       console.error(error.message);
