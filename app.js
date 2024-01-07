@@ -29,7 +29,7 @@ app.post('/api/v1/articles', async (req, res) => {
     const response = await run(article);
     setTimeout(() => {
       deleteUploadedFiles()
-    }, 5000)
+    }, 30000)
     // console.log(response);
     return res.status(200).json(response);  // Reversed the order of status and json
   } catch (error) {
