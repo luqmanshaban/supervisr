@@ -129,5 +129,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-#exclude the text files
-uploads/
+# #exclude the text files
+# uploads/
