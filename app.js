@@ -57,7 +57,7 @@ async function run(article) {
   Make sure you ADHERE to the following RULES: 
   1. Create and return a JSON object called feedback. The object MUST have the keys: summary, alternativePhrases(phrases the writer should use instead of the one used), waysToImprove, relevantArticles.
   2. Do NOT include any additional words or characters before or after the JavaScript object.
-  3. Ensure that the length of the response is not less than 200 words.
+  3. ENSURE that the length of the response is NOT less than 200 words.
   4. PROVIDE your response in plain text format, WITHOUT using code snippet formatting.
 
    Here's the essay : ${article}`;
