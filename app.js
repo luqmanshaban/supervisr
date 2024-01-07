@@ -30,7 +30,7 @@ app.post('/api/v1/articles', async (req, res) => {
     setTimeout(() => {
       deleteUploadedFiles()
     }, 30000)
-    // console.log(response);
+    console.log(response);
     return res.status(200).json(response);  // Reversed the order of status and json
   } catch (error) {
     console.error(error);
@@ -54,11 +54,11 @@ async function run(article) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const message = `analyze the following essay, and return insightful summaries, highlight key findings, contribute and offer ways to improve the work by suggesting alternative academic phrases and relevant peer-reviewed articles only from Google Scholar. Ensure to condense main points while maintaining accuracy and coherence.
-  Make sure you do the following: 
-  1. Create and return a JavaScript object called feedback. The object MUST have the keys: summary, alternativePhrases(phrases the writer should use instead of the one used), waysToImprove, relevantArticles.
-  2. Don't add any other word or character before or after the JavaScript object 
-  3. Make sure the length of the response is not less than 200 words
-  4. Return your response in a TEXT format and NOT in a CODE SNIPPET format i.e NO BACKTICKS
+  Make sure you ADHERE to the following RULES: 
+  1. Create and return a JSON object called feedback. The object MUST have the keys: summary, alternativePhrases(phrases the writer should use instead of the one used), waysToImprove, relevantArticles.
+  2. Do NOT include any additional words or characters before or after the JavaScript object.
+  3. Ensure that the length of the response is not less than 200 words.
+  4. PROVIDE your response in plain text format, WITHOUT using code snippet formatting.
 
    Here's the essay : ${article}`;
 
