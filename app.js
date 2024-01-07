@@ -17,7 +17,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io/mysupervisr-client']
+  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io']
 }))
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
