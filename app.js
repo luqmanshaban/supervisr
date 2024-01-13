@@ -17,7 +17,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io']
+  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io', 'http://localhost:3000', 'https://mysupervisr-client.vercel.app']
 }))
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
@@ -53,14 +53,16 @@ async function run(article) {
   // For text-only input, use the gemini-pro model
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-  const message = `analyze the following essay, and return insightful summaries, highlight key findings, contribute and offer ways to improve the work by suggesting alternative academic phrases and relevant peer-reviewed articles only from Google Scholar. Ensure to condense main points while maintaining accuracy and coherence.
-  Make sure you ADHERE to the following RULES: 
-  1. Create and return a JSON object called feedback. The object MUST have the keys: summary, alternativePhrases(phrases the writer should use instead of the one used), waysToImprove, relevantArticles.
-  2. Do NOT include any additional words or characters before or after the JavaScript object.
-  3. ENSURE that the length of the response is NOT less than 200 words.
-  4. PROVIDE your response in plain text format, WITHOUT using code snippet formatting.
+  const message = `Analyze the provided essay, offering insightful summaries, highlighting key findings, and contributing suggestions for improvement. Provide alternative academic phrases and relevant peer-reviewed articles sourced exclusively from Google Scholar. Condense main points while maintaining accuracy and coherence.
 
-   Here's the essay : ${article}`;
+  Ensure strict adherence to the following rules:
+  1. Create and return a JSON object named 'feedback.' The object must contain keys such as summary, alternativePhrases (suggesting phrases for the writer to use instead), waysToImprove, and relevantArticles.
+  2. Do not include any additional words or characters before or after the JavaScript object.
+  3. Ensure that the response length is not less than 200 words.
+  4. Present your response in plain text format, avoiding the use of code snippet formatting.
+  
+  Here's the essay: ${article}
+  `;
 
   const result = await model.generateContent(message);
   const response = await result.response;
