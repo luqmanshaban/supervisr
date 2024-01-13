@@ -73,7 +73,6 @@ app.post('/file-upload', async(req, res) => {
   const article = req.body.article 
   try {
     const response = await run(article)
-    console.log(response);
     res.status(200).json({ response: response })
   } catch (error) {
     res.status(500).json({ error: error})
