@@ -17,7 +17,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io', 'http://localhost:3000', 'https://mysupervisr-client.vercel.app']
+  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io', 'http://localhost:3000', 'https://mysupervisr-client.vercel.app', 'http://127.0.0.1:8080']
 }))
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
@@ -56,10 +56,9 @@ async function run(article) {
   const message = `Analyze the provided essay, offering insightful summaries, highlighting key findings, and contributing suggestions for improvement. Provide alternative academic phrases and relevant peer-reviewed articles sourced exclusively from Google Scholar. Condense main points while maintaining accuracy and coherence.
 
   Ensure strict adherence to the following rules:
-  1. Create and return a JSON object named 'feedback.' The object must contain keys such as summary, alternativePhrases (suggesting phrases for the writer to use instead), waysToImprove, and relevantArticles.
-  2. Do not include any additional words or characters before or after the JavaScript object.
-  3. Ensure that the response length is not less than 200 words.
-  4. Present your response in plain text format, avoiding the use of code snippet formatting.
+  1. Create and ONLY return a string object named 'feedback.' The object must contain keys such as summary, alternativePhrases (suggesting phrases for the writer to use instead), waysToImprove, and relevantArticles.
+  2. Ensure that the response length is not less than 200 words.
+  3. Return your response in and ONLY in a VALID  JSON OBJECT format i.e { "feedback": { "summery": "", "keyFindings": "", "alternativePhrases": "","waysToImprove": "", "relevantArticles":"" } }
   
   Here's the essay: ${article}
   `;
@@ -70,6 +69,17 @@ async function run(article) {
   return text;
 }
 
+app.post('/file-upload', async(req, res) => {
+  const article = req.body.article 
+  try {
+    const response = await run(article)
+    console.log(response);
+    res.status(200).json({ response: response })
+  } catch (error) {
+    res.status(500).json({ error: error})
+    console.log(error);
+  }
+})
 
 const uploadDirectory = 'uploads/';
 
@@ -92,30 +102,30 @@ app.get('/', (req, res) => {
   res.send('<p>Visit: <a href="https://luqmanshaban.github.io/mysupervisr-client/">The client side</a></p>')
 })
 
-app.post('/file-upload', upload.single('file'), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
-  }
+// app.post('/file-upload', upload.single('file'), async (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).send('No file uploaded.');
+//   }
 
-  const uploadedFilePath = new URL(req.file.filename, `file://${__dirname}/${uploadDirectory}`).toString();
+//   const uploadedFilePath = new URL(req.file.filename, `file://${__dirname}/${uploadDirectory}`).toString();
 
-  // returns the content of the uploaded file
-  const file = `uploads/${req.file.filename}`;
-  fs.readFile(file, 'utf-8', async (err, data) => {
-    if (err) {
-      console.error(err.message);
-      return res.status(500).send('Error reading uploaded file.');
-    }
+//   // returns the content of the uploaded file
+//   const file = `uploads/${req.file.filename}`;
+//   fs.readFile(file, 'utf-8', async (err, data) => {
+//     if (err) {
+//       console.error(err.message);
+//       return res.status(500).send('Error reading uploaded file.');
+//     }
 
-    try {
-      const feedback = await getFeedback(data.toString());
-      res.status(200).send(feedback);
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).send('Error generating feedback.');
-    }
-  });
-});
+//     try {
+//       const feedback = await getFeedback(data.toString());
+//       res.status(200).send(feedback);
+//     } catch (error) {
+//       console.error(error.message);
+//       res.status(500).send('Error generating feedback.');
+//     }
+//   });
+// });
 
 async function getFeedback(readArticle) {
   return new Promise(async (resolve, reject) => {
@@ -132,7 +142,7 @@ async function getFeedback(readArticle) {
         
       // });
       resolve(response.data)
-      // });
+      // });crucial
     } catch (error) {
       console.error(error.message);
       reject('Error sending request to generate feedback.');
