@@ -17,7 +17,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io', 'http://localhost:3000', 'https://mysupervisr-client.vercel.app', 'http://127.0.0.1:8080']
+  origin: ['http://127.0.0.1:3000', 'https://luqmanshaban.github.io', 'http://localhost:3000', 'https://mysupervisr-client.vercel.app', 'http://127.0.0.1:8080', 'https://mysupervisr.netlify.app']
 }))
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
