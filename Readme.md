@@ -1,6 +1,4 @@
-Certainly! Below is a simple README for your project. It covers the basic information about the project, its purpose, setup, and usage.
 
-```markdown
 # AI Article Analysis and Feedback
 
 This project leverages Google's Generative AI to analyze essays and provide insightful summaries, highlight key findings, and suggest improvements. It utilizes an Express.js server for handling API requests and file uploads.
